@@ -4,13 +4,24 @@ import { calculateEstimate } from "@/lib/procedure-data";
 import { generatePdfReport } from "@/lib/generate-pdf";
 import { sendReportEmail } from "@/lib/send-email";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2025-02-24.acacia",
-});
-
-const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
+export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
+  const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
+  if (!stripeSecretKey || !webhookSecret) {
+    console.error("Stripe webhook is not configured");
+    return NextResponse.json(
+      { error: "Webhook service is not configured" },
+      { status: 500 }
+    );
+  }
+
+  const stripe = new Stripe(stripeSecretKey, {
+    apiVersion: "2025-02-24.acacia",
+  });
+
   const body = await request.text();
   const signature = request.headers.get("stripe-signature");
 
