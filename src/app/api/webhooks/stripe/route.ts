@@ -5,7 +5,7 @@ import { generatePdfReport } from "@/lib/generate-pdf";
 import { sendReportEmail } from "@/lib/send-email";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: "2025-04-30.basil",
+  apiVersion: "2025-02-24.acacia",
 });
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
